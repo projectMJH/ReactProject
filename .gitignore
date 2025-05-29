@@ -1,24 +1,54 @@
-# Compiled class file
-*.class
+# Node modules
+/node_modules/
 
-# Log file
+# Build output
+/build/
+/dist/
+
+# Runtime data
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env files
+.env
+.env.*.local
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Testing
+/coverage/
+
+# Production build artifacts
 *.log
 
-# BlueJ files
-*.ctxt
+# Parcel-bundler cache (if used)
+/.cache/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# React Native
+.expo/
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
+# Misc
+*.tgz
 *.zip
-*.tar.gz
-*.rar
+*.tmp
+*.bak
+*.swp
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Mac specific files
+.AppleDouble
+.LSOverride
+
+# Optional: Ignore redux devtools extension config (if not part of project)
+/redux-devtools-extension/

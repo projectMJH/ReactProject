@@ -72,21 +72,21 @@ function Header() {
                         <Link className="dropdown-item" to="/food/find">맛집 검색</Link>
                       </div>
                     </li>
-                  <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" id="yummyDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">부산에 가면</a>
-                    <div className="dropdown-menu" aria-labelledby="yummyDropdown">
-                      <Link className="dropdown-item" to={"/info/list/1"}>명소</Link>
-                      <Link className="dropdown-item" to={"/info/list/3"}>쇼핑</Link>
-                      <Link className="dropdown-item" to={"/info/list/2"}>음식</Link>
-                      <a className="dropdown-item" href="archive.html">검색</a>
-                    </div>
-                  </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to={"/youtube/find"}>부산 동영상</Link>
+                    <li className="nav-item dropdown">
+                      <a className="nav-link dropdown-toggle" href="#" id="yummyDropdown" role="button"
+                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">부산에 가면</a>
+                      <div className="dropdown-menu" aria-labelledby="yummyDropdown">
+                        <a className="dropdown-item" href="index.html">명소</a>
+                        <a className="dropdown-item" href="archive.html">쇼핑</a>
+                        <a className="dropdown-item" href="archive.html">음식</a>
+                        <a className="dropdown-item" href="archive.html">검색</a>
+                      </div>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" to={"/board/list"}>커뮤니티</Link>
+                      <a className="nav-link" href="#">부산 동영상</a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">커뮤니티</a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="archive.html">부산 여행 뉴스</a>

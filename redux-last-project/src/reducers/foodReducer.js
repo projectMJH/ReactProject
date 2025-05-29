@@ -1,4 +1,4 @@
-import {FETCH_FOOD_LIST} from "../actions/types"
+import {FETCH_FOOD_LIST,FETCH_FOOD_DETAIL} from "../actions/types"
 // Map => {}, VO|Entity => {}, list => {}
 
 const foodState = {
@@ -25,7 +25,14 @@ const foodState = {
         => 종류별로 처리
            types는 동시 처리
            actions는 따로 처리
-           reducer는 따로 처리
+           reducer는 따로 처리 => index에서 한번에 모아서 처리
+
+           프로그램
+           1. 분리 작업 : 기능 => 객체지향 (재사용)
+                                | 기능: 클래스
+                                | 리액트/Vue => Component
+           2. 공통 기능
+           3. 조립 : main(), App
  */
 export default function(state=foodState, action){
   switch(action.type){
@@ -33,6 +40,11 @@ export default function(state=foodState, action){
       return {
         ...state,
         food_list: action.payload
+      }
+    case FETCH_FOOD_DETAIL:
+      return {
+        ...state,
+        food_detail: action.payload
       }
     default:
       return state

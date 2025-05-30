@@ -14,6 +14,9 @@ import BoardInsert from "./components/board/BoardInsert";
 import BoardDetail from "./components/board/BoardDetail";
 import BoardDelete from "./components/board/BoardDelete";
 import BoardUpdate from "./components/board/BoardUpdate";
+import InfoDetail from "./components/info/InfoDetail";
+import InfoFind from "./components/info/InfoFind";
+import NewsList from "./components/news/NewsList";
 
 // <함수명> => return에 있는 HTML을 출력
 // 모든 component => 반드시 return을 포함하고 있어야 된다 (return 안에는 HTML 포함)
@@ -51,6 +54,9 @@ function App() {
           <Route path="/board/detail/:no" element={<BoardDetail />} />
           <Route path="/board/delete/:no" element={<BoardDelete />} />
           <Route path="/board/update/:no" element={<BoardUpdate />} />
+          <Route path="/info/detail/:no" element={<InfoDetail />} />
+          <Route path="/info/find" element={<InfoFind />} />
+          <Route path="/news/list" element={<NewsList />} />
         </Routes>
       <Footer />
     </Router>

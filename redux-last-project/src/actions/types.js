@@ -11,6 +11,8 @@ export const FETCH_INFO_FIND='FETCH_INFO_FIND';
 export const RESET='RESET';
 // youtube
 export const FETCH_YOUTUBE_FIND='FETCH_YOUTUBE_FIND';
+// news
+export const FETCH_NEWS_LIST='FETCH_NEWS_LIST';
 // board
 export const BOARD_LIST='BOARD_LIST';
 export const BOARD_DETAIL='BOARD_DETAIL';

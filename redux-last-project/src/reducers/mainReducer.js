@@ -1,7 +1,8 @@
-import {FETCH_MAIN_DATA} from "../actions/types";
+import {FETCH_MAIN_DATA,FETCH_NEWS_LIST} from "../actions/types";
 
 const mainState = {
-  main_data: {}
+  main_data: {},
+  news_data: {}
 }
 
 // dispatch(action) => 자동 호출
@@ -14,6 +15,11 @@ export default function(state = mainState, action) {
       return {
         ...state,
         main_data: action.payload
+      }
+    case FETCH_NEWS_LIST:
+      return {
+        ...state,
+        news_data: action.payload
       }
     default:
       return state;

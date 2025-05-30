@@ -56,3 +56,17 @@ export const fetchMainData = ()=> dispatch => {
     dispatch(action); // reducer로 전송
   })
 }
+
+export const fetchNewsData = (fd)=> dispatch => {
+  axios.get("http://localhost:3355/news/list",{
+    params:{
+      query:fd
+    }
+  }).then(res=>{
+    const action={
+      type:'FETCH_NEWS_LIST',
+      payload:res.data
+    }
+    dispatch(action);
+  })
+}

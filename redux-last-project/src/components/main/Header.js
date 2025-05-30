@@ -79,7 +79,7 @@ function Header() {
                       <Link className="dropdown-item" to={"/info/list/1"}>명소</Link>
                       <Link className="dropdown-item" to={"/info/list/3"}>쇼핑</Link>
                       <Link className="dropdown-item" to={"/info/list/2"}>음식</Link>
-                      <a className="dropdown-item" href="archive.html">검색</a>
+                      <Link className="dropdown-item" to={"/info/find"}>검색</Link>
                     </div>
                   </li>
                     <li className="nav-item">
@@ -89,10 +89,7 @@ function Header() {
                       <Link className="nav-link" to={"/board/list"}>커뮤니티</Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="archive.html">부산 여행 뉴스</a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="#">채팅</a>
+                      <Link className="nav-link" to={"/news/list"}>부산 여행 뉴스</Link>
                     </li>
                   </ul>
                 </div>

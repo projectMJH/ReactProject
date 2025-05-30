@@ -1,9 +1,9 @@
-import {FETCH_FOOD_LIST,FETCH_FOOD_DETAIL} from "../actions/types"
+import {FETCH_FOOD_LIST,FETCH_FOOD_DETAIL,FETCH_FOOD_FIND} from "../actions/types"
 // Map => {}, VO|Entity => {}, list => {}
 
 const foodState = {
   food_list: {},
-  find_list: {},
+  find_list: [],
   food_detail: {}
 }
 /*
@@ -45,6 +45,11 @@ export default function(state=foodState, action){
       return {
         ...state,
         food_detail: action.payload
+      }
+    case FETCH_FOOD_FIND:
+      return {
+        ...state,
+        find_list: action.payload
       }
     default:
       return state

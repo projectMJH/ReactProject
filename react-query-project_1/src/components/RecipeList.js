@@ -31,7 +31,7 @@ function RecipeList() {
   const [curpage, setCurpage] = useState(1);
   // setCurpage => refetching
   const {isLoading, data} = useQuery({
-    queryKey: ["recipe-list"+curpage],
+    queryKey: ["recipe-list",curpage],
     queryFn: async () =>{
       return await apiClient.get(`/recipe/list/${curpage}`);
     }

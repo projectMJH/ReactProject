@@ -21,7 +21,7 @@ function RecipeDetail(){
   // 데이터 읽기 (서버 연결)
   // 한파트 => nodejs => + 채팅
   const {isLoading,error,isError,data}=useQuery({
-    queryKey: ['detail' + no],
+    queryKey: ['detail',no],
     queryFn: async () =>{
       return await apiClient.get(`/recipe/detail/${no}`)
     }

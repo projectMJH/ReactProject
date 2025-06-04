@@ -37,7 +37,7 @@ import PagePrint from "./PagePrint";
    const [title, setTitle] = useState("감자");
    const [curpage, setCurpage] = useState(1);
    const {isLoading,error,isError,data,refetch:recipeFindData} = useQuery({
-     queryKey: ["recipe_find"+curpage],
+     queryKey: ["recipe_find",curpage],
      queryFn: async () => {
        return await apiClient.get(`/recipe/find/${curpage}/${title}`);
      }

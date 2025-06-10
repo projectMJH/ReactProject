@@ -5,6 +5,7 @@ import Header from "./components/main/Header";
 import Footer from "./components/main/Footer";
 import RecipeList from "./components/recipe/RecipeList";
 import RecipeDetail from "./components/recipe/RecipeDetail";
+import RecipeFind from "./components/recipe/RecipeFind";
 import FoodList from "./components/food/FoodList";
 import FoodDetail from "./components/food/FoodDetail";
 import BoardList from "./components/board/BoardList";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/recipe/list" element={<RecipeList />} />
         <Route path="/recipe/detail/:no" element={<RecipeDetail />} />
+        <Route path="/recipe/find" element={<RecipeFind />} />
         <Route path="/food/list" element={<FoodList />} />
         <Route path="/food/detail/:fno" element={<FoodDetail />} />
         <Route path="/board/list" element={<BoardList />} />

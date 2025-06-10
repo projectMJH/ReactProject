@@ -49,22 +49,28 @@ function FoodDetail() {
           <tr>
             <th width={"20%"} style={{"color":"gray"}}>주소</th>
             <td width={"50%"}>{data.data.address}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>전화</th>
             <td width={"50%"}>{data.data.phone}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>음식종류</th>
             <td width={"50%"}>{data.data.type}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>가격대</th>
             <td width={"50%"}>{data.data.price}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>주차</th>
             <td width={"50%"}>{data.data.parking}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>영업시간</th>
             <td width={"50%"}>{data.data.time}</td>
-          </tr>          <tr>
+          </tr>
+          <tr>
             <th width={"20%"} style={{"color":"gray"}}>테마</th>
             <td width={"50%"}>{data.data.theme}</td>
           </tr>

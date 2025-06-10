@@ -1,7 +1,23 @@
-import {Fragment} from "react";
+import {Fragment, RefObject, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 
 function Header() {
+  const [logIn, setLogIn] = useState<boolean>(false);
+  const [id, setId] = useState<string>("");
+  const [pwd, setPwd] = useState<string>("");
+  const idRef=useRef(null);
+  const PwdRef=useRef(null);
+  // sessionStorage
+  /*
+      서버에서  session 저장 안된다
+      -------------------------- DB
+      세션 저장 : sessionStorage.setItem("키","값") => 서버로 id,pwd 전송 => 결과값
+      세션 해제 : sessionStorage.clear()
+      
+      // 댓글
+
+   */
+
   return (
     <Fragment>
       <div className="top_header_area">

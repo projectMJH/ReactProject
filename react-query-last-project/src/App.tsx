@@ -13,6 +13,8 @@ import BoardUpdate from "./components/board/BoardUpdate";
 import BoardInsert from "./components/board/BoardInsert";
 import BoardDetail from "./components/board/BoardDetail";
 import BoardDelete from "./components/board/BoardDelete";
+import ChatClient from "./components/chat/ChatClient";
+import NewsList from "./components/news/NewsList";
 
 
 function App() {
@@ -31,7 +33,8 @@ function App() {
         <Route path="/board/delete/:no" element={<BoardDelete />} />
         <Route path="/board/detail/:no" element={<BoardDetail />} />
         <Route path="/board/insert" element={<BoardInsert />} />
-
+        <Route path="/chat/chat" element={<ChatClient />}/>
+        <Route path="/news/list" element={<NewsList />}/>
       </Routes>
       <Footer />
     </Router>

@@ -1,12 +1,16 @@
-import {Fragment, RefObject, useRef, useState} from "react";
+import {Fragment, useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
+import {useMutation} from "@tanstack/react-query";
+import apiClient from "../../http-commons";
+import {AxiosResponse,AxiosError} from "axios";
 
 function Header() {
-  const [logIn, setLogIn] = useState<boolean>(false);
+  //const nav= useNavigate();
+  const [login, setLogin] = useState<boolean>(false);
   const [id, setId] = useState<string>("");
   const [pwd, setPwd] = useState<string>("");
-  const idRef=useRef(null);
-  const PwdRef=useRef(null);
+  const idRef=useRef<HTMLInputElement>(null);
+  const pwdRef=useRef<HTMLInputElement>(null);
   // sessionStorage
   /*
       서버에서  session 저장 안된다
@@ -17,7 +21,76 @@ function Header() {
       // 댓글
 
    */
+  interface LoginData {
+    msg: string;
+    id: string;
+    name: string;
+  }
+  // useQuery => 함수명 지정 : refetch:함수명
+  // useMutation =>          mutate:함수명
+  const {mutate:loginOk} = useMutation({
+    mutationFn:async (data) => {
+      const res:AxiosResponse<LoginData>=await apiClient.get(`/member/login/${id}/${pwd}`);
+      return res.data
+    },
+    onSuccess:(data:LoginData) => {
+      if(data.msg==='NOID')
+      {
+        alert("아이디가 존재하지 않습니다")
+        setId('')
+        setPwd('')
+        idRef.current?.focus()
+      }
+      else if(data.msg==='NOPWD')
+      {
+        alert("비밀번호가 틀립니다")
+        setPwd('')
+        pwdRef.current?.focus()
+      }
+      else if(data.msg==='OK')
+      {
+        // 세션 저장 => 자바스크립트
+        window.sessionStorage.setItem('id',data.id)
+        // session.setAttribute
+        window.sessionStorage.setItem('name',data.name)
+        setLogin(true)
+        window.location.reload();
+      }
+    },
+    onError:(err:AxiosError) => {
+      console.log("Login Error:", err.response||err.message);
+    }
+  })
+  /////////////////////////// 서버와 연결
+  // 로그인 여부에 따라 새로고침 => id!=null
+  useEffect(() => {
+    // getAttribute("id")
+    if(sessionStorage.getItem('id'))
+    {
+      setLogin(true)
+    }
+  },[])
 
+  const memberLogin=():void=>{
+    if(id.trim()==="")
+    {
+      idRef.current?.focus();
+      return;
+    }
+    if(pwd.trim()==="")
+    {
+      pwdRef.current?.focus();
+      return;
+    }
+    loginOk();
+  }
+  const memberLogout=():void=>{
+    window.sessionStorage.clear();  // session.invalidate() => removeItem("id")
+    setId('');
+    setPwd('');
+    setLogin(false);
+    window.location.reload();
+  }
   return (
     <Fragment>
       <div className="top_header_area">
@@ -35,23 +108,32 @@ function Header() {
             <div className="col-7 col-sm-6">
               <div className="signup-search-area d-flex align-items-center justify-content-end">
                 <div className="login_register_area d-flex">
-                  <div className="login">
-                    <a href="register.html">Sing in</a>
-                  </div>
-                  <div className="register">
-                    <a href="register.html">Sing up</a>
-                  </div>
+                  {
+                    !login?(
+                      <div className="login">
+                        ID:&nbsp;<input type={"text"} size={10} className={"input-sm"}
+                                   onChange={(e:any) => setId(e.target.value)}
+                                   ref={idRef}
+                                   value={id}
+                            />&nbsp;
+                        PW:&nbsp;<input type={"password"} size={10} className={"input-sm"}
+                                  onChange={(e:any) => setPwd(e.target.value)}
+                                  ref={pwdRef}
+                                  value={pwd}
+                            />&nbsp;
+                        <button className={"btn-sm btn-primary"} onClick={memberLogin}>로그인</button>
+                      </div>
+                    ):(
+                      <div className="login">
+                        {window.sessionStorage.getItem("name")} 님이 로그인 중입니다&nbsp;
+                        <button className={"btn-sm btn-primary"} onClick={memberLogout}>로그아웃</button>
+                      </div>
+                    )
+                  }
+
+
                 </div>
-                <div className="search_button">
-                  <a className="searchBtn" href="#"><i className="fa fa-search" aria-hidden="true"></i></a>
-                </div>
-                <div className="search-hidden-form">
-                  <form action="#" method="get">
-                    <input type="search" name="search" id="search-anything" placeholder="Search Anything..."/>
-                    <input type="submit" value="" className="d-none"/>
-                    <span className="searchBtn"><i className="fa fa-times" aria-hidden="true"></i></span>
-                  </form>
-                </div>
+
               </div>
             </div>
           </div>
@@ -103,8 +185,15 @@ function Header() {
                       <Link className="nav-link" to={"/board/list"}>커뮤니티</Link>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" to={"/news/list"}>부산 여행 뉴스</Link>
+                      <Link className="nav-link" to={"/news/list"}>뉴스</Link>
                     </li>
+                    {
+                      login &&
+                      <li className="nav-item">
+                        <Link className="nav-link" to={"/chat/chat"}>채팅</Link>
+                      </li>
+                    }
+
                   </ul>
                 </div>
               </nav>

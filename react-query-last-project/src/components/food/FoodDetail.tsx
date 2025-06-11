@@ -1,8 +1,9 @@
-import {Fragment,useEffect} from "react";
-import {useQuery} from "@tanstack/react-query";
+import {Fragment,useEffect,useRef,useState} from "react";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {useNavigate,useParams} from "react-router-dom";
 import apiClient from "../../http-commons";
 import FoodMap from "./FoodMap";
+import {AxiosError, AxiosResponse} from "axios";
 
 // react / vue => 화면 UI (HTML)
 // 서버로부터 데이터를 어떻게 받을까? => 속도
@@ -36,14 +37,32 @@ interface FoodDetailData {
   price: string;
   rdays: string;
 }
+interface CommentData{
+  no: number;
+  fno: number;
+  id: string;
+  name: string;
+  msg: string;
+  dbday: string;
+}
 interface FoodResponse {
-  data: FoodDetailData;
+  data: {
+    foods:FoodDetailData,
+    comments:CommentData[]
+  };
 
 }
 function FoodDetail() {
   // FoodList에서 들어오는 값을 받는다
-  const {fno}=useParams<string>();
+  const {fno}=useParams<{fno:string}>();
   const nav = useNavigate();
+  const [msg, setMsg] = useState<string>("");
+  const [no, setNo] = useState<number>(0);
+  const msgRef = useRef<HTMLTextAreaElement>(null);
+  const [toggle, setToggle] = useState<boolean>(true);
+  ////// 수정
+  const [umsg, setUmsg] = useState<string>("");
+  const umsgRef=useRef<HTMLTextAreaElement>(null);
   // link:PUSH, back:POP
   /*
       let a=10
@@ -52,10 +71,66 @@ function FoodDetail() {
       let a:number=10
    */
   // 서버 연결
-  const {isLoading,isError,error,data}=useQuery<FoodResponse,Error>({
+  const {isLoading,isError,error,data,refetch:foodDetailData}=useQuery<FoodResponse,Error>({
     queryKey:['food-detail',fno],
     queryFn:async () => await apiClient.get(`/food/detail/${fno}`),
     enabled:!!fno // fno가 존재할 때만 실행
+  })
+
+  const {mutate:commentInsert} = useMutation<FoodResponse>({
+    mutationFn: async () => {
+      const res:AxiosResponse<FoodResponse,Error> = await apiClient.post(`/comment/insert`,
+      {
+        fno: fno,
+        id: sessionStorage.getItem("id"),
+        name: sessionStorage.getItem("name"),
+        msg: msg
+      })
+      return res.data;
+    },
+    onSuccess:(data:FoodResponse) => {
+      foodDetailData()
+      if (msgRef.current) {
+        msgRef.current.value = '';
+      }
+    },
+    onError:(err:Error) => {
+      console.log("comment Error:", err.message);
+    }
+  })
+
+  // 삭제
+  const {mutate:commentDelete}=useMutation<FoodResponse>({
+    mutationFn: async () => {
+      const res:AxiosResponse<FoodResponse,Error> = await apiClient.delete(`/comment/delete/${no}/${fno}`)
+      return res.data;
+    },
+    onSuccess:(data:FoodResponse) => {
+      foodDetailData()
+    },
+    onError:(err:Error) => {
+      console.log("comment Error:", err.message);
+    }
+  })
+  // 수정
+  const {mutate:commentUpdate}=useMutation<FoodResponse>({
+    mutationFn: async () => {
+      const res:AxiosResponse<FoodResponse,Error> = await apiClient.put(`/comment/update`,{
+        no:no,
+        msg:msg
+      })
+      return res.data;
+    },
+    onSuccess:(data:FoodResponse) => {
+      foodDetailData()
+      if (msgRef.current) {
+        msgRef.current.value = '';
+      }
+      setToggle(true)
+    },
+    onError:(err:Error) => {
+      console.log("comment Error:", err.message);
+    }
   })
 
   if(isLoading)
@@ -63,9 +138,42 @@ function FoodDetail() {
   if(isError)
     return <h3 className={"text-center"}>{error?.message}</h3>
 
-  const food=data?.data
-  console.log(food);
 
+  const food:FoodDetailData|undefined=data?.data.foods
+  console.log(food);
+  const comment:CommentData[]|undefined=data?.data.comments;
+  console.log(comment);
+
+  const insert=():void=>{
+    if(msg==="")
+    {
+      msgRef.current?.focus();
+      return;
+    }
+    commentInsert()
+  }
+
+  const del=(no:number):void=>{
+    setNo(no);
+    commentDelete()
+  }
+
+  const updateData=(no:number,index:number):void=>{
+    if(msgRef.current && comment){
+      msgRef.current.value = comment[index].msg;
+    }
+    setToggle(false);
+    setNo(no);
+    console.log(comment && comment[index].msg);
+  }
+  const update=():void=>{
+    if(msg==="")
+    {
+      msgRef.current?.focus();
+      return;
+    }
+    commentUpdate()
+  }
   return (
   <Fragment>
     <div className="breadcumb-area" style={{"backgroundImage": "url(/img/bg-img/breadcumb.jpg)"}}>
@@ -147,6 +255,79 @@ function FoodDetail() {
             </tr>
             </tbody>
           </table>
+        </div>
+        <div className="row" style={{"marginTop": "20px"}}>
+          <table className={"table"}>
+            <tbody>
+            <tr>
+              <td>
+                {
+                  comment &&
+                  comment.map((com:CommentData,index:number)=>
+                    <table className={"table"} key={index}>
+                      <tbody>
+                      <tr>
+                        <td width={"80%"} className={"text-left"}>
+                          ◑{com.name}({com.dbday})
+                        </td>
+                        <td width={"20%"} className={"text-right"}>
+                          {
+                            com.id===sessionStorage.getItem("id") &&
+                            (
+                              <span>
+                                <button className={"btn-sm btn-warning"} onClick={()=>updateData(com.no,index)}>수정</button>&nbsp;
+                                <button className={"btn-sm btn-info"} onClick={()=>del(com.no)}>삭제</button>
+                              </span>
+                            )
+                          }
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colSpan={2} valign={"top"}>
+                          <pre style={{"whiteSpace":"pre-wrap","backgroundColor":"white","border":"none"}}>{com.msg}</pre>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  )
+                }
+
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          {
+            window.sessionStorage.getItem("id") &&
+              (
+                <table className={"table"}>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <textarea rows={5} cols={120} style={{"float":"left"}}
+                                ref={msgRef}
+                                onChange={(e)=>setMsg(e.target.value)}
+                      ></textarea>
+                      {
+                        toggle?(
+                          <button className={"btn-primary"}
+                                  style={{"float":"left","width":"100px","height":"100px"}}
+                                  onClick={insert}
+                                  value={msg}
+                          >댓글쓰기</button>
+                        ):(
+                          <button className={"btn-primary"}
+                                  style={{"float":"left","width":"100px","height":"100px"}}
+                                  onClick={()=>update()}
+                                  value={msg}
+                          >수정하기</button>
+                        )
+                      }
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              )
+          }
         </div>
       </div>
     </section>
